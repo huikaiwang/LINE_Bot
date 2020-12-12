@@ -34,6 +34,7 @@ def callback():
 
     return 'OK'
 
+
 func = False #功能
 
 @handler.add(FollowEvent)
