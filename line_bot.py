@@ -39,18 +39,21 @@ func = False #功能
 @handler.add(FollowEvent)
 def handle_follow(event):
 	global func
+
 	if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 		user = check_user(event.source.user_id)
+
 		if user:
 			state = check_state(event.source.user_id)
+
 			if state == "Root":
 				func = True
 				reply = "Welcome,Root " + user +"\nInstr table:\n傳座位表給學生: e.g. pass 圖片網址" 
 			else:
 				reply = "Hello " + user
+
 		else:
 			reply = "同學你好，請輸入你在SmartExam上的AccessToken"
-
 
 		line_bot_api.reply_message(
 			event.reply_token,
@@ -61,15 +64,20 @@ def handle_follow(event):
 @handler.add(MessageEvent, message=TextMessage)
 def echo(event):
 	global func
+
 	if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 		state = check_state(event.source.user_id)
+
 		if state == "Root":
+
 			if func:
 				text = event.message.text.split(" ")
+
 				if text[0]=="pass":
 					image_url = text[1]
 					#course_id = text[2]
 					stu = search_user()
+
 					for i in stu:	
 						to = ''.join(i)
 			
@@ -80,7 +88,9 @@ def echo(event):
 						)
 						
 					reply = "instr executed"
-					func = False				
+
+					func = False		
+		
 				else:
 					reply = "invalid instr"
 
@@ -91,11 +101,14 @@ def echo(event):
 
 			else:
 				reply = "Instr table:\n傳座位表給學生:\ne.g. pass 圖片網址"
+
 				line_bot_api.reply_message(
 					event.reply_token,
 					TextSendMessage(text=reply)
 				) 
+
 				func = True
+
 		elif state == "Member": 
 
 			line_bot_api.reply_message(
